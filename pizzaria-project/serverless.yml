@@ -34,10 +34,3 @@ functions:
               - "pizza-pronta"
             source:
               - "pizzaria"
-
-resources:
-  Resources:
-    EsperaEntregaQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: espera-entrega
