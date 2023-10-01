@@ -1,24 +1,35 @@
 import json
+import boto3
 
+dynamodb = boto3.client('dynamodb')
+sqs = boto3.client('sqs')
 
-def hello(event, context):
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
-    }
+def processPedido(event, context):
+    for record in event['Records']:
+        # Extrair dados do evento
+        evento = json.loads(record['body'])
 
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
+        # Gravar evento no DynamoDB
+        response = dynamodb.put_item(
+            TableName='eventos-pizzaria',
+            Item={
+                'pedido': {'S': evento['pedido']},
+                'status': {'S': evento['status']}
+            }
+        )
 
-    return response
+        print(f"Evento gravado no DynamoDB: {response}")
 
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """
+def enviarParaFilaSQS(event, context):
+    for record in event['Records']:
+        # Extrair dados do evento
+        evento = json.loads(record['body'])
+
+        if evento['status'] == 'pizza-pronta':
+            # Enviar evento para a fila de entrega
+            response = sqs.send_message(
+                QueueUrl='URL-da-fila-de-entrega',  # Substitua pela URL da fila de entrega
+                MessageBody=json.dumps(evento)
+            )
+
+            print(f"Mensagem enviada para a fila de entrega: {response}")
