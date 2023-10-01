@@ -26,9 +26,8 @@ def enviarParaFilaSQS(event, context):
         evento = json.loads(record['body'])
 
         if evento['status'] == 'pizza-pronta':
-            # Enviar evento para a fila de entrega
             response = sqs.send_message(
-                QueueUrl='URL-da-fila-de-entrega',  # Substitua pela URL da fila de entrega
+                QueueUrl='https://sqs.us-east-1.amazonaws.com/051246040808/espera-entrega',
                 MessageBody=json.dumps(evento)
             )
 
