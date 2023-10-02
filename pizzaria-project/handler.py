@@ -22,7 +22,7 @@ def enviarParaFilaSQS(event, context):
     for record in event['Records']:
         evento = json.loads(record['body'])
 
-        if evento['status'] == 'pizza-pronta':
+        if evento['status'] == 'pronto':
             response = sqs.send_message(
                 QueueUrl='https://sqs.us-east-1.amazonaws.com/051246040808/espera-entrega',
                 MessageBody=json.dumps(evento)

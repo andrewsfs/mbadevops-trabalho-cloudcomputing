@@ -19,9 +19,9 @@ functions:
             - arn:aws:events:${aws:region}:${aws:accountId}:event-bus/pizzaria
           pattern:
             detail-type:
-              - "pedido"
+              - 'pedido'
             source:
-              - "pizzaria"
+              - 'com.pizza.status'
 
   enviarParaFilaSQS:
     handler: handler.enviarParaFilaSQS
@@ -31,6 +31,6 @@ functions:
             - arn:aws:events:${aws:region}:${aws:accountId}:event-bus/pizzaria
           pattern:
             detail-type:
-              - "pizza-pronta"
+              - 'pizza-pronta'
             source:
-              - "pizzaria"
+              - 'com.pizza.status'
